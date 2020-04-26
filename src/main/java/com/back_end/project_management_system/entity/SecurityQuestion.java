@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "security_questions")
@@ -14,9 +15,11 @@ public class SecurityQuestion {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
+	@NotNull(message = "security question should not be null")
 	private int id;
 	
 	@Column(name = "security_question")
+	@NotNull(message = "security question should not be null")
 	private String securityQuestion;
 	
 	public SecurityQuestion() {}
