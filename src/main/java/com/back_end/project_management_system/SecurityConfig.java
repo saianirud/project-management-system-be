@@ -32,6 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http.csrf().disable().authorizeRequests()
 			.antMatchers("/auth/**").permitAll()
+			.antMatchers("/admin/**").hasAuthority("ADMIN")
 			.antMatchers(HttpMethod.POST, "/projects").hasAnyAuthority("ADMIN", "MANAGER")
 			.antMatchers(HttpMethod.PUT, "/projects/**").hasAnyAuthority("ADMIN", "MANAGER")
 			.antMatchers(HttpMethod.DELETE, "/projects/**").hasAnyAuthority("ADMIN", "MANAGER")

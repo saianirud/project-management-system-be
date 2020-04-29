@@ -3,6 +3,7 @@ package com.back_end.project_management_system.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.back_end.project_management_system.dao.IssueDAO;
 import com.back_end.project_management_system.dao.WorkLogDAO;
 import com.back_end.project_management_system.dto.WorkLogDTO;
 import com.back_end.project_management_system.entity.Issue;
@@ -28,6 +29,9 @@ public class WorkLogService {
 	IssueService issueService;
 	
 	@Autowired
+	IssueDAO issueDAO;
+	
+	@Autowired
 	JWTUtil jwtUtil;
 	
 	public WorkLog addWorkLog(WorkLogDTO workLogDTO) {
@@ -50,7 +54,11 @@ public class WorkLogService {
 		
 		workLog.setLogDateTime(workLogDTO.getLogDateTime());
 		
-		return workLogDAO.addWorkLog(workLog);
+		WorkLog newWorkLog = workLogDAO.addWorkLog(workLog);
+		
+		issueDAO.saveIssue(issue);
+		
+		return newWorkLog;
 	}
 	
 	public WorkLog updateWorkLog(WorkLogDTO workLogDTO, int worklogId) {
@@ -66,13 +74,18 @@ public class WorkLogService {
 		long timeSpent = issueUtil.convertEstimatedTimeToMilliseconds(workLogDTO.getTimeSpent());
 		
 		long loggedTime = workLog.getIssue().getLoggedTime() - workLog.getTimeSpent() + timeSpent;
-		workLog.getIssue().setLoggedTime(loggedTime);
+		Issue issue = workLog.getIssue();
+		issue.setLoggedTime(loggedTime);
 		
 		workLog.setTimeSpent(timeSpent);
 		workLog.setWorkDescription(workLogDTO.getWorkDescription());
 		workLog.setLogDateTime(workLogDTO.getLogDateTime());
 		
-		return workLogDAO.addWorkLog(workLog);
+		WorkLog updatedWorkLog = workLogDAO.addWorkLog(workLog);
+		
+		issueDAO.saveIssue(issue);
+		
+		return updatedWorkLog;
 	}
 	
 	public int deleteWorkLog(int worklogId, String jwtToken) {

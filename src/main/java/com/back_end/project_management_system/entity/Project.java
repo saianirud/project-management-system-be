@@ -56,6 +56,17 @@ public class Project {
 		this.projectDecription = projectDecription;
 	}
 
+	public Project(String projectKey, String projectName, String projectType, String projectDecription,
+			int lastIssueIndex, UserDetails projectLead) {
+		super();
+		this.projectKey = projectKey;
+		this.projectName = projectName;
+		this.projectType = projectType;
+		this.projectDecription = projectDecription;
+		this.lastIssueIndex = lastIssueIndex;
+		this.projectLead = projectLead;
+	}
+
 	public String getProjectName() {
 		return projectName;
 	}

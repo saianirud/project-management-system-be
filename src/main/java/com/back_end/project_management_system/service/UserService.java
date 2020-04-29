@@ -7,9 +7,11 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.back_end.project_management_system.dao.UserDAO;
 import com.back_end.project_management_system.dao.UserDetailsDAO;
+import com.back_end.project_management_system.dto.UpdateUserDTO;
 import com.back_end.project_management_system.entity.User;
 import com.back_end.project_management_system.entity.UserDetails;
 import com.back_end.project_management_system.exception.AuthException;
@@ -28,20 +30,13 @@ public class UserService {
 	@Autowired
 	UserDetailsDAO userDetailsDAO;
 	
-	public Map<String, Object> getUserByJwtToken(String token) {
+	public UserDetails getUserByJwtToken(String token) {
 		
 		String username = jwtUtil.getUsernameFromToken(token);
 		
-		Optional<User> user = userDAO.getUserByUsername(username);
+		UserDetails userDetails = validUser(username);
 		
-		Map<String, Object> modifiedUser = new HashMap<String, Object>();
-		
-		modifiedUser.put("username", user.get().getUsername());
-		modifiedUser.put("name", user.get().getUserDetails().getName());
-		modifiedUser.put("token", token);
-		modifiedUser.put("role", user.get().getRole());
-		
-		return modifiedUser;
+		return userDetails;
 	}
 	
 	public List<UserDetails> getAllUsers() {
@@ -54,15 +49,46 @@ public class UserService {
 		return userDAO.getAllAdminsManagers();
 	}
 	
-	public UserDetails validUser(String username) {
+	public UserDetails updateUser(UpdateUserDTO updateUserDTO, @PathVariable String username) {
 		
-		Optional<UserDetails> user = userDetailsDAO.getUserByUsername(username);
+		User user = getUserByUsername(username);
+		
+		user.setRole(updateUserDTO.getRole());
+		user.getUserDetails().setRole(updateUserDTO.getRole());
+		user.getUserDetails().setName(updateUserDTO.getName());
+		
+		userDAO.saveUser(user);
+		
+		return user.getUserDetails();
+	}
+	
+	public Map<String, String> deleteUser(String username) {
+		
+		User user = getUserByUsername(username);
+		
+		userDAO.deleteUser(user);
+		
+		Map<String, String> response = new HashMap<String, String>();
+		
+		response.put("username", username);
+		
+		return response;
+	}
+	
+	public User getUserByUsername(String username) {
+		
+		Optional<User> user = userDAO.getUserByUsername(username);
 		
 		if (!user.isPresent()) {
 			throw new AuthException("User doesn't exist with username: " + username);
 		}
 		
 		return user.get();
+	}
+	
+	public UserDetails validUser(String username) {
+		
+		return userDAO.validUser(username);
 		
 	}
 	

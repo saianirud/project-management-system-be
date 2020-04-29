@@ -76,7 +76,7 @@ public class IssueController {
 	@GetMapping("/{issueId}")
 	public ResponseEntity<?> getIssue(@PathVariable String issueId) {
 		
-		Issue issue = issueService.validIssue(issueId);
+		Issue issue = issueService.getIssue(issueId);
 		
 		return ResponseEntity.ok(issue);
 	}

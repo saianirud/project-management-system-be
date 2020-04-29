@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.back_end.project_management_system.dto.ProjectDTO;
+import com.back_end.project_management_system.dto.projectFilterDTO;
 import com.back_end.project_management_system.entity.Project;
 import com.back_end.project_management_system.service.ProjectService;
 
@@ -71,10 +72,10 @@ public class ProjectController {
 		return ResponseEntity.ok(response);
 	}
 	
-	@GetMapping("/{projectKey}")
-	public ResponseEntity<?> getProject(@PathVariable String projectKey) {
+	@PostMapping("/{projectKey}")
+	public ResponseEntity<?> getProject(@PathVariable String projectKey, @RequestBody projectFilterDTO projectFilterDTO) {
 	
-		Project project = projectService.validProject(projectKey);
+		Project project = projectService.getProject(projectKey, projectFilterDTO);
 		
 		return ResponseEntity.ok(project);
 	}

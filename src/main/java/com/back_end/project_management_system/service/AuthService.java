@@ -73,13 +73,13 @@ public class AuthService {
 
 		final String token = jwtUtil.generateToken(userDetails);
 		
-		Optional<User> user = userDAO.getUserByUsername(userDetails.getUsername());
+		com.back_end.project_management_system.entity.UserDetails user = userDAO.validUser(userDetails.getUsername());
 
 		Map<String, Object> response = new HashMap<String, Object>();
-		response.put("username", user.get().getUsername());
-		response.put("name", user.get().getUserDetails().getName());
+		response.put("username", user.getUsername());
+		response.put("name", user.getName());
 		response.put("token", token);
-		response.put("role", user.get().getRole());
+		response.put("role", user.getRole());
 		return response;
 	}
 	

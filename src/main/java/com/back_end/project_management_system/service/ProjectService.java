@@ -1,7 +1,6 @@
 package com.back_end.project_management_system.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,10 +8,10 @@ import org.springframework.stereotype.Service;
 import com.back_end.project_management_system.dao.ProjectDAO;
 import com.back_end.project_management_system.dao.UserDetailsDAO;
 import com.back_end.project_management_system.dto.ProjectDTO;
+import com.back_end.project_management_system.dto.projectFilterDTO;
 import com.back_end.project_management_system.entity.Project;
 import com.back_end.project_management_system.entity.UserDetails;
 import com.back_end.project_management_system.exception.AccessDeniedException;
-import com.back_end.project_management_system.exception.ProjectException;
 
 @Service
 public class ProjectService {
@@ -44,15 +43,14 @@ public class ProjectService {
 		return projectDAO.getAllProjects();
 	}
 	
+	public Project getProject(String projectKey, projectFilterDTO projectFilterDTO) {
+		
+		return projectDAO.getProjectWithFilter(projectKey, projectFilterDTO);
+	}
+	
 	public Project validProject(String projectKey) {
 		
-		Optional<Project> project = projectDAO.getProject(projectKey);
-		
-		if (!project.isPresent()) {
-			throw new ProjectException("Project doesn't exist with key: " + projectKey);
-		}
-		
-		return project.get();
+		return projectDAO.validProject(projectKey);
 	}
 	
 	public Project updateProject(ProjectDTO projectDTO, String projectKey, String jwtToken) {

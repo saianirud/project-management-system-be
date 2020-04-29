@@ -74,6 +74,33 @@ public class Issue {
 		this.issuePriority = issuePriority;
 	}
 
+	public Issue(String id, String issueSummary, IssueType issueType, IssueCategory issueCategory,
+			IssuePriority issuePriority) {
+		super();
+		this.id = id;
+		this.issueSummary = issueSummary;
+		this.issueType = issueType;
+		this.issueCategory = issueCategory;
+		this.issuePriority = issuePriority;
+	}
+
+	public Issue(String id, String issueSummary, String issueDescription, IssueType issueType,
+			IssueCategory issueCategory, IssuePriority issuePriority, UserDetails issueReporter,
+			UserDetails issueAssignee, Project project, long originalEstimate, long loggedTime) {
+		super();
+		this.id = id;
+		this.issueSummary = issueSummary;
+		this.issueDescription = issueDescription;
+		this.issueType = issueType;
+		this.issueCategory = issueCategory;
+		this.issuePriority = issuePriority;
+		this.issueReporter = issueReporter;
+		this.issueAssignee = issueAssignee;
+		this.project = project;
+		this.originalEstimate = originalEstimate;
+		this.loggedTime = loggedTime;
+	}
+
 	public String getId() {
 		return id;
 	}

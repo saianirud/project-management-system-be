@@ -56,6 +56,14 @@ public class UserDetails {
 		this.role = role;
 	}
 
+	public UserDetails(int id, String username, String name, String role) {
+		super();
+		this.id = id;
+		this.username = username;
+		this.name = name;
+		this.role = role;
+	}
+
 	public int getId() {
 		return id;
 	}

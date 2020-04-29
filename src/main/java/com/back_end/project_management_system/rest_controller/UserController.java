@@ -1,7 +1,6 @@
 package com.back_end.project_management_system.rest_controller;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +20,11 @@ public class UserController {
 	UserService userService;
 	
 	@GetMapping("/token/{token}")
-	public Map<String, Object> getUserByJwtToken(@PathVariable String token) {
+	public ResponseEntity<?> getUserByJwtToken(@PathVariable String token) {
 		
-		Map<String, Object> user = userService.getUserByJwtToken(token);
+		UserDetails user = userService.getUserByJwtToken(token);
 		
-		return user;
+		return ResponseEntity.ok(user);
 	}
 	
 	@GetMapping("/projectLead")

@@ -3,6 +3,8 @@ package com.back_end.project_management_system.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +54,7 @@ public class IssueService {
 		return issueDAO.getAllIssueCategories();
 	}
 	
+	@Transactional
 	public Issue addIssue(IssueDTO issueDTO) {
 		
 		Issue issue = new Issue(issueDTO.getIssueSummary(), issueDTO.getIssueDescription(), issueDTO.getIssueType(), issueDTO.getIssuePriority());
@@ -68,11 +71,16 @@ public class IssueService {
 		
 		int index = issueProject.getLastIssueIndex() + 1;
 		issue.setId(issueProject.getProjectKey() + '-' + index);
-		issue.getProject().setLastIssueIndex(index);
 		
-		return issueDAO.addIssue(issue);
+		Issue newIssue = issueDAO.addIssue(issue);
+		
+		issueProject.setLastIssueIndex(index);
+		projectDAO.saveProject(issueProject);
+		
+		return newIssue;
 	}
 	
+	@Transactional
 	public Issue updateIssue(IssueDTO issueDTO, String issueId) {
 
 		long originalEstimate = issueUtil.convertEstimatedTimeToMilliseconds(issueDTO.getOriginalEstimate());
@@ -97,12 +105,14 @@ public class IssueService {
 		return issueDAO.updateIssue(issue);
 	}
 	
+	@Transactional
 	public String deleteIssue(String issueId) {
 		
 		return issueDAO.deleteIssue(issueId);
 	}
 	
-	public Issue validIssue(String id) {
+	@Transactional
+	public Issue getIssue(String id) {
 		
 		Optional<Issue> issue = issueDAO.getIssueById(id);
 		
@@ -111,6 +121,12 @@ public class IssueService {
 		}
 		
 		return issue.get();
+	}
+	
+	@Transactional
+	public Issue validIssue(String id) {
+		
+		return issueDAO.validIssue(id);
 	}
 
 }
