@@ -35,7 +35,7 @@ public class WorkLog {
 	
 	@ManyToOne
 	@JoinColumn(name = "issue")
-	@JsonIgnoreProperties({"workLogs"})
+	@JsonIgnoreProperties({"workLogs", "linkedIssues"})
 	private Issue issue;
 	
 	@Column(name = "log_date_time")

@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.back_end.project_management_system.dto.IssueDTO;
+import com.back_end.project_management_system.dto.LinkIssuesDTO;
 import com.back_end.project_management_system.entity.Issue;
 import com.back_end.project_management_system.entity.IssueCategory;
 import com.back_end.project_management_system.entity.IssuePriority;
 import com.back_end.project_management_system.entity.IssueType;
+import com.back_end.project_management_system.entity.LinkedIssues;
 import com.back_end.project_management_system.service.IssueService;
 
 @RestController
@@ -80,4 +82,24 @@ public class IssueController {
 		
 		return ResponseEntity.ok(issue);
 	}
+	
+	@PostMapping("/linkIssues")
+	public ResponseEntity<?> linkIssues(@Valid @RequestBody LinkIssuesDTO linkIssuesDTO) {
+		
+		List<LinkedIssues> linkedIssues = issueService.linkIssues(linkIssuesDTO);
+		
+		return ResponseEntity.ok(linkedIssues);
+	}
+	
+	@PostMapping("/unlinkIssues")
+	public ResponseEntity<?> unlinkIssues(@Valid @RequestBody LinkIssuesDTO linkIssuesDTO) {
+		
+		issueService.unlinkIssues(linkIssuesDTO);
+		
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("message", "Issues detached successfully");
+		
+		return ResponseEntity.ok(map);
+	}
+	
 }

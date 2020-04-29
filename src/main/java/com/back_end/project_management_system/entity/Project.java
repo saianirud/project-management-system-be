@@ -43,8 +43,8 @@ public class Project {
 	@JsonIgnoreProperties({"projects", "reportedIssues", "assignedIssues", "workLogs"})
 	private UserDetails projectLead;
 	
-	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-	@JsonIgnoreProperties({"workLogs", "project"})
+	@OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
+	@JsonIgnoreProperties({"workLogs", "project", "linkedIssues"})
 	private List<Issue> issues;
 	
 	public Project() {}

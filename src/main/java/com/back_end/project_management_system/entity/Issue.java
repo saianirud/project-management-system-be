@@ -49,7 +49,7 @@ public class Issue {
 	@JsonIgnoreProperties({"projects", "reportedIssues", "assignedIssues", "workLogs"})
 	private UserDetails issueAssignee;
 	
-	@OneToMany(mappedBy = "issue", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "issue", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties({"issue"})
 	private List<WorkLog> workLogs;
 	
@@ -63,6 +63,9 @@ public class Issue {
 	
 	@Column(name = "logged_time")
 	private long loggedTime;
+	
+	@OneToMany(mappedBy = "linkedIssuesPK.issueId", cascade = CascadeType.REMOVE)
+	private List<LinkedIssues> linkedIssues;
 	
 	public Issue() {}
 
@@ -195,6 +198,14 @@ public class Issue {
 
 	public void setWorkLogs(List<WorkLog> workLogs) {
 		this.workLogs = workLogs;
+	}
+
+	public List<LinkedIssues> getLinkedIssues() {
+		return linkedIssues;
+	}
+
+	public void setLinkedIssues(List<LinkedIssues> linkedIssues) {
+		this.linkedIssues = linkedIssues;
 	}
 
 }

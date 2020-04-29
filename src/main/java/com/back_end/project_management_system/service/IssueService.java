@@ -1,5 +1,6 @@
 package com.back_end.project_management_system.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,10 +13,13 @@ import com.back_end.project_management_system.dao.IssueDAO;
 import com.back_end.project_management_system.dao.ProjectDAO;
 import com.back_end.project_management_system.dao.UserDetailsDAO;
 import com.back_end.project_management_system.dto.IssueDTO;
+import com.back_end.project_management_system.dto.LinkIssuesDTO;
 import com.back_end.project_management_system.entity.Issue;
 import com.back_end.project_management_system.entity.IssueCategory;
 import com.back_end.project_management_system.entity.IssuePriority;
 import com.back_end.project_management_system.entity.IssueType;
+import com.back_end.project_management_system.entity.LinkedIssues;
+import com.back_end.project_management_system.entity.LinkedIssuesPK;
 import com.back_end.project_management_system.entity.Project;
 import com.back_end.project_management_system.entity.UserDetails;
 import com.back_end.project_management_system.exception.ProjectException;
@@ -127,6 +131,48 @@ public class IssueService {
 	public Issue validIssue(String id) {
 		
 		return issueDAO.validIssue(id);
+	}
+	
+	@Transactional
+	public List<LinkedIssues> linkIssues(LinkIssuesDTO linkIssuesDTO) {
+		
+		List<LinkedIssues> dependentIssues = generateLinkIssues(linkIssuesDTO);
+		
+		return issueDAO.linkIssues(dependentIssues);
+	}
+	
+	@Transactional
+	public void unlinkIssues(LinkIssuesDTO linkIssuesDTO) {
+		
+		List<LinkedIssues> dependentIssues = generateLinkIssues(linkIssuesDTO);
+		
+		issueDAO.unlinkIssues(dependentIssues);
+	}
+	
+	public List<LinkedIssues> generateLinkIssues(LinkIssuesDTO linkIssuesDTO) {
+		
+		List<LinkedIssues> dependentIssues = new ArrayList<LinkedIssues>();
+		
+		List<String> linkedIssues = linkIssuesDTO.getLinkedIssues();
+		
+		for (int i = 0; i < linkedIssues.size(); i++) {
+
+			if (linkIssuesDTO.getIssueId().equals(linkedIssues.get(i))) {
+				throw new ProjectException("Can't link/unlink the same issue");
+			}
+			
+			String[] issueId = linkIssuesDTO.getIssueId().split("-");
+			String[] dependentIssueId = linkedIssues.get(i).split("-");
+			
+			if(!issueId[0].equals(dependentIssueId[0])) {
+				throw new ProjectException("Can't link/unlink issues of another project");
+			}
+			
+			LinkedIssuesPK linkedIssuesPK = new LinkedIssuesPK(linkIssuesDTO.getIssueId(), linkedIssues.get(i));
+			dependentIssues.add(new LinkedIssues(linkedIssuesPK));
+		}
+		
+		return dependentIssues;
 	}
 
 }

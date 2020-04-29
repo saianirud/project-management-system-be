@@ -36,11 +36,11 @@ public class UserDetails {
 	private List<Project> projects;
 	
 	@OneToMany(mappedBy = "issueReporter")
-	@JsonIgnoreProperties({"issueReporter", "issueAssignee", "project", "workLogs"})
+	@JsonIgnoreProperties({"issueReporter", "issueAssignee", "project", "workLogs", "linkedIssues"})
 	private List<Issue> reportedIssues;
 
 	@OneToMany(mappedBy = "issueAssignee")
-	@JsonIgnoreProperties({"issueReporter", "issueAssignee", "project", "workLogs"})
+	@JsonIgnoreProperties({"issueReporter", "issueAssignee", "project", "workLogs", "linkedIssues"})
 	private List<Issue> assignedIssues;
 	
 	@OneToMany(mappedBy = "loggedUser")

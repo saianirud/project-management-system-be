@@ -18,11 +18,13 @@ import com.back_end.project_management_system.entity.Issue;
 import com.back_end.project_management_system.entity.IssueCategory;
 import com.back_end.project_management_system.entity.IssuePriority;
 import com.back_end.project_management_system.entity.IssueType;
+import com.back_end.project_management_system.entity.LinkedIssues;
 import com.back_end.project_management_system.exception.ProjectException;
 import com.back_end.project_management_system.jpa_repository.IssueCategoryRepository;
 import com.back_end.project_management_system.jpa_repository.IssuePriorityRepository;
 import com.back_end.project_management_system.jpa_repository.IssueRepository;
 import com.back_end.project_management_system.jpa_repository.IssueTypeRepository;
+import com.back_end.project_management_system.jpa_repository.LinkedIssuesRepository;
 import com.back_end.project_management_system.jpa_repository.ProjectRepository;
 
 @Repository
@@ -42,6 +44,9 @@ public class IssueDAO {
 	
 	@Autowired
 	IssueCategoryRepository issueCategoryRepository;
+	
+	@Autowired
+	LinkedIssuesRepository linkedIssuesRepository;
 	
 	@PersistenceContext
 	EntityManager entityManager;
@@ -122,6 +127,21 @@ public class IssueDAO {
 			throw new ProjectException(exception.getMessage());
 		}
 		
+	}
+	
+	public List<Issue> findAllIssuesById(List<String> ids) {
+		
+		return issueRepository.findAllById(ids);
+	}
+	
+	public List<LinkedIssues> linkIssues(List<LinkedIssues> linkedIssues) {
+		
+		return linkedIssuesRepository.saveAll(linkedIssues);
+	}
+	
+	public void unlinkIssues(List<LinkedIssues> linkedIssues) {
+		
+		linkedIssuesRepository.deleteAll(linkedIssues);
 	}
 
 }
