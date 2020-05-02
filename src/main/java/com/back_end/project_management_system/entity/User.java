@@ -99,7 +99,7 @@ public class User {
 	public void setTokenExpiration(Date tokenExpiration) {
 		this.tokenExpiration = tokenExpiration;
 	}
-	
+
 	public UserDetails getUserDetails() {
 		return userDetails;
 	}

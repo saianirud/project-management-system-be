@@ -55,9 +55,9 @@ public class DashboardDAO {
 		
 		Root<Issue> root = criteriaQuery.from(Issue.class);
 		
-		criteriaQuery.multiselect(root.get("project").get("projectKey"), root.get("issueCategory").get("issueCategory"), criteriaBuilder.count(root.get("id")));
+		criteriaQuery.multiselect(root.get("projectKey"), root.get("issueCategory").get("issueCategory"), criteriaBuilder.count(root.get("id")));
 		criteriaQuery.where(criteriaBuilder.equal(root.get("issueAssignee").get("username"), dashboardProjectsDTO.getUsername()));
-		criteriaQuery.groupBy(root.get("project"), root.get("issueCategory"));
+		criteriaQuery.groupBy(root.get("projectKey"), root.get("issueCategory"));
 		
 		TypedQuery<?> typedQuery = entityManager.createQuery(criteriaQuery);
 		
@@ -74,9 +74,9 @@ public class DashboardDAO {
 		
 		UserDetails userDetails = userService.validUser(dashboardProjectsDTO.getUsername());
 		
-		criteriaQuery.multiselect(root.get("id"), root.get("issueCategory"), root.get("issuePriority"), root.get("issueType"), root.get("project").get("projectKey"));
+		criteriaQuery.multiselect(root.get("id"), root.get("issueCategory"), root.get("issuePriority"), root.get("issueType"), root.get("projectKey"));
 		criteriaQuery.where(criteriaBuilder.equal(root.get("issueAssignee"), userDetails));
-		criteriaQuery.orderBy(criteriaBuilder.asc(root.get("project")));
+		criteriaQuery.orderBy(criteriaBuilder.asc(root.get("projectKey")));
 		
 		TypedQuery<DashboardAssignedIssuesDTO> typedQuery = entityManager.createQuery(criteriaQuery);
 		

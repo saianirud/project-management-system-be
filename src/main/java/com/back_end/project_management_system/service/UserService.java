@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +32,7 @@ public class UserService {
 	@Autowired
 	UserDetailsDAO userDetailsDAO;
 	
+	@Transactional
 	public UserDetails getUserByJwtToken(String token) {
 		
 		String username = jwtUtil.getUsernameFromToken(token);
@@ -39,16 +42,19 @@ public class UserService {
 		return userDetails;
 	}
 	
+	@Transactional
 	public List<UserDetails> getAllUsers() {
 	
 		return userDAO.getAllUsers();
 	}
 	
+	@Transactional
 	public List<UserDetails> getAllAdminsManagers() {
 		
 		return userDAO.getAllAdminsManagers();
 	}
 	
+	@Transactional
 	public UserDetails updateUser(UpdateUserDTO updateUserDTO, @PathVariable String username) {
 		
 		User user = getUserByUsername(username);
@@ -62,6 +68,7 @@ public class UserService {
 		return user.getUserDetails();
 	}
 	
+	@Transactional
 	public Map<String, String> deleteUser(String username) {
 		
 		User user = getUserByUsername(username);
@@ -75,6 +82,7 @@ public class UserService {
 		return response;
 	}
 	
+	@Transactional
 	public User getUserByUsername(String username) {
 		
 		Optional<User> user = userDAO.getUserByUsername(username);
@@ -86,6 +94,7 @@ public class UserService {
 		return user.get();
 	}
 	
+	@Transactional
 	public UserDetails validUser(String username) {
 		
 		return userDAO.validUser(username);

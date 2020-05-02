@@ -1,9 +1,10 @@
 package com.back_end.project_management_system.service;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.back_end.project_management_system.dao.IssueDAO;
 import com.back_end.project_management_system.dao.WorkLogDAO;
 import com.back_end.project_management_system.dto.WorkLogDTO;
 import com.back_end.project_management_system.entity.Issue;
@@ -29,11 +30,9 @@ public class WorkLogService {
 	IssueService issueService;
 	
 	@Autowired
-	IssueDAO issueDAO;
-	
-	@Autowired
 	JWTUtil jwtUtil;
 	
+	@Transactional
 	public WorkLog addWorkLog(WorkLogDTO workLogDTO) {
 		
 		long timeSpent = issueUtil.convertEstimatedTimeToMilliseconds(workLogDTO.getTimeSpent());
@@ -56,11 +55,10 @@ public class WorkLogService {
 		
 		WorkLog newWorkLog = workLogDAO.addWorkLog(workLog);
 		
-		issueDAO.saveIssue(issue);
-		
 		return newWorkLog;
 	}
 	
+	@Transactional
 	public WorkLog updateWorkLog(WorkLogDTO workLogDTO, int worklogId) {
 		
 		WorkLog workLog = workLogDAO.getWorkLog(worklogId);
@@ -83,11 +81,10 @@ public class WorkLogService {
 		
 		WorkLog updatedWorkLog = workLogDAO.addWorkLog(workLog);
 		
-		issueDAO.saveIssue(issue);
-		
 		return updatedWorkLog;
 	}
 	
+	@Transactional
 	public int deleteWorkLog(int worklogId, String jwtToken) {
 		
 		String username = jwtUtil.getUsernameFromToken(jwtToken);

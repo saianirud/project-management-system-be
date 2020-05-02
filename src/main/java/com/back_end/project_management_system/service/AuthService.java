@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -43,6 +45,7 @@ public class AuthService {
 	@Autowired
 	AuthenticationManager authenticationManager;
 	
+	@Transactional
 	public com.back_end.project_management_system.entity.UserDetails userRegistration(RegisterUserDTO registrationData) {
 		
 		User user = new User(registrationData.getUsername(), registrationData.getPassword(), registrationData.getSecurityQuestion(), registrationData.getSecurityAnswer());
@@ -50,6 +53,7 @@ public class AuthService {
 		user.setRole("EMPLOYEE");
 		
 		com.back_end.project_management_system.entity.UserDetails userDetails = new com.back_end.project_management_system.entity.UserDetails(user.getUsername(), registrationData.getName(), user.getRole());
+		
 		user.setUserDetails(userDetails);
 		
 		User newUser = authDAO.userRegistration(user);
@@ -57,6 +61,7 @@ public class AuthService {
 		return newUser.getUserDetails();
 	}
 	
+	@Transactional
 	public Map<String, Object> createAuthenticationToken(AuthenticationRequest authenticationRequest) throws Exception {
 
 		try {
@@ -83,12 +88,14 @@ public class AuthService {
 		return response;
 	}
 	
+	@Transactional
 	public String getForgotPasswordToken(ForgotPasswordDTO req) {
 		
 		String token = authDAO.getForgotPasswordToken(req);
 		return token;
 	}
 	
+	@Transactional
 	public User validateUserByToken(String token) {
 		
 		Optional<User> userObject = authDAO.findUserByToken(token);
@@ -108,6 +115,7 @@ public class AuthService {
 		return user;
 	}
 	
+	@Transactional
 	public boolean resetPassword(User user, String password) {
 		
 		User updatedUser = authDAO.resetPassword(user, password);
@@ -121,6 +129,7 @@ public class AuthService {
 		return true;
 	}
 	
+	@Transactional
 	public List<SecurityQuestion> getSecurityQuestions() {
 		
 		return authDAO.getSecurityQuestions();
