@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.back_end.project_management_system.dto.AllProjectsDTO;
 import com.back_end.project_management_system.dto.ProjectDTO;
 import com.back_end.project_management_system.dto.projectFilterDTO;
 import com.back_end.project_management_system.entity.Project;
@@ -52,7 +53,7 @@ public class ProjectController {
 	@GetMapping("")
 	public ResponseEntity<?> getAllProjects() {
 		
-		List<Project> projects = projectService.getAllProjects();
+		List<AllProjectsDTO> projects = projectService.getAllProjects();
 		
 		return ResponseEntity.ok(projects);
 	}

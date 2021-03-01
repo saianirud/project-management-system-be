@@ -46,14 +46,17 @@ public class IssueService {
 	@Autowired
 	ProjectService projectService;
 	
+	@Transactional
 	public List<IssueType> getAllIssueTypes() {
 		return issueDAO.getAllIssueTypes();
 	}
 	
+	@Transactional
 	public List<IssuePriority> getAllIssuePriorities() {
 		return issueDAO.getAllIssuePriorities();
 	}
 	
+	@Transactional
 	public List<IssueCategory> getAllIssueCategories() {
 		return issueDAO.getAllIssueCategories();
 	}
@@ -71,7 +74,7 @@ public class IssueService {
 		
 		issue.setIssueReporter(issueReporter);
 		issue.setIssueAssignee(issueAssignee);
-		issue.setProject(issueProject);
+		issue.setProjectKey(issueDTO.getProjectKey());
 		
 		int index = issueProject.getLastIssueIndex() + 1;
 		issue.setId(issueProject.getProjectKey() + '-' + index);
@@ -96,13 +99,11 @@ public class IssueService {
 		
 		UserDetails issueAssignee = userService.validUser(issueDTO.getIssueAssignee());
 		
-		Project issueProject = projectService.validProject(issueDTO.getProjectKey());
-		
 		issue.setId(issueId);
 		issue.setIssueReporter(issueReporter);
 		issue.setIssueAssignee(issueAssignee);
 		issue.setIssueCategory(issueDTO.getIssueCategory());
-		issue.setProject(issueProject);
+		issue.setProjectKey(issueDTO.getProjectKey());
 		issue.setOriginalEstimate(originalEstimate);
 		issue.setLoggedTime(loggedTime);
 

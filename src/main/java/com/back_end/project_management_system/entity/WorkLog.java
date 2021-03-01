@@ -2,6 +2,7 @@ package com.back_end.project_management_system.entity;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,10 +31,9 @@ public class WorkLog {
 	
 	@ManyToOne
 	@JoinColumn(name = "logged_user")
-	@JsonIgnoreProperties({"projects", "reportedIssues", "assignedIssues", "workLogs"})
 	private UserDetails loggedUser;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "issue")
 	@JsonIgnoreProperties({"workLogs", "linkedIssues"})
 	private Issue issue;

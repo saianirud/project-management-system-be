@@ -11,7 +11,7 @@ import com.back_end.project_management_system.entity.Project;
 
 public interface ProjectRepository extends JpaRepository<Project, String> {
 
-	@EntityGraph(value = "allProjectsFetch", type = EntityGraphType.FETCH)
+	@EntityGraph(value = "projectsFetch", type = EntityGraphType.FETCH)
 	public List<Project> findAll();
 	
 	public Optional<Project> findProjectByProjectName(String name);

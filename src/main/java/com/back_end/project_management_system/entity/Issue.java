@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -15,6 +17,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "issues")
+@NamedEntityGraph(name = "issuesFetch", attributeNodes = {
+		@NamedAttributeNode("issueType"),
+		@NamedAttributeNode("issueCategory"),
+		@NamedAttributeNode("issuePriority"),
+		@NamedAttributeNode("issueReporter"),
+		@NamedAttributeNode("issueAssignee")
+})
 public class Issue {
 	
 	@Id
@@ -41,22 +50,18 @@ public class Issue {
 	
 	@ManyToOne
 	@JoinColumn(name = "issue_reporter")
-	@JsonIgnoreProperties({"projects", "reportedIssues", "assignedIssues", "workLogs"})
 	private UserDetails issueReporter;
 	
 	@ManyToOne
 	@JoinColumn(name = "issue_assignee")
-	@JsonIgnoreProperties({"projects", "reportedIssues", "assignedIssues", "workLogs"})
 	private UserDetails issueAssignee;
 	
 	@OneToMany(mappedBy = "issue", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties({"issue"})
 	private List<WorkLog> workLogs;
 	
-	@ManyToOne
-	@JoinColumn(name = "project_key")
-	@JsonIgnoreProperties({"issues"})
-	private Project project;
+	@Column(name = "project_key")
+	private String projectKey;
 	
 	@Column(name = "original_estimate")
 	private long originalEstimate;
@@ -89,7 +94,7 @@ public class Issue {
 
 	public Issue(String id, String issueSummary, String issueDescription, IssueType issueType,
 			IssueCategory issueCategory, IssuePriority issuePriority, UserDetails issueReporter,
-			UserDetails issueAssignee, Project project, long originalEstimate, long loggedTime) {
+			UserDetails issueAssignee, String projectKey, long originalEstimate, long loggedTime) {
 		super();
 		this.id = id;
 		this.issueSummary = issueSummary;
@@ -99,7 +104,7 @@ public class Issue {
 		this.issuePriority = issuePriority;
 		this.issueReporter = issueReporter;
 		this.issueAssignee = issueAssignee;
-		this.project = project;
+		this.projectKey = projectKey;
 		this.originalEstimate = originalEstimate;
 		this.loggedTime = loggedTime;
 	}
@@ -176,12 +181,12 @@ public class Issue {
 		this.loggedTime = loggedTime;
 	}
 
-	public Project getProject() {
-		return project;
+	public String getProjectKey() {
+		return projectKey;
 	}
 
-	public void setProject(Project project) {
-		this.project = project;
+	public void setProjectKey(String projectKey) {
+		this.projectKey = projectKey;
 	}
 
 	public IssueCategory getIssueCategory() {

@@ -17,8 +17,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "projects")
-@NamedEntityGraph(name = "allProjectsFetch",
-	attributeNodes = @NamedAttributeNode("projectLead")
+@NamedEntityGraph(name = "projectsFetch", attributeNodes = {
+			@NamedAttributeNode("projectLead")
+		}
 )
 public class Project {
 	
@@ -40,11 +41,10 @@ public class Project {
 
 	@ManyToOne
 	@JoinColumn(name = "project_lead")
-	@JsonIgnoreProperties({"projects", "reportedIssues", "assignedIssues", "workLogs"})
 	private UserDetails projectLead;
 	
-	@OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
-	@JsonIgnoreProperties({"workLogs", "project", "linkedIssues"})
+	@OneToMany(mappedBy = "projectKey", cascade = CascadeType.REMOVE)
+	@JsonIgnoreProperties({"workLogs", "projectKey", "linkedIssues"})
 	private List<Issue> issues;
 	
 	public Project() {}

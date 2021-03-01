@@ -3,6 +3,7 @@ package com.back_end.project_management_system.dao;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -84,6 +85,8 @@ public class ProjectDAO {
 		try {
 			Project project = validProject(projectKey);
 			
+			EntityGraph<?> entityGraph = entityManager.getEntityGraph("issuesFetch");
+			
 			CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 			
 			CriteriaQuery<Issue> criteriaQuery = criteriaBuilder.createQuery(Issue.class);
@@ -91,13 +94,15 @@ public class ProjectDAO {
 			Root<Issue> root = criteriaQuery.from(Issue.class);
 			
 			Predicate assigneePredicate = criteriaBuilder.in(root.get("issueAssignee").get("username")).value(projectFilterDTO.getAssignees());
-			Predicate projectKeyPredicate = criteriaBuilder.equal(root.get("project").get("projectKey"), project.getProjectKey());
+			Predicate projectKeyPredicate = criteriaBuilder.equal(root.get("projectKey"), project.getProjectKey());
 			
 			Predicate finalPredicate = criteriaBuilder.and(projectKeyPredicate, assigneePredicate);
 			
 			criteriaQuery.where(finalPredicate);
 			
 			TypedQuery<Issue> typedQuery = entityManager.createQuery(criteriaQuery);
+			
+			typedQuery.setHint("javax.persistence.fetchgraph", entityGraph);
 			
 			List<Issue> issues = typedQuery.getResultList();
 			
@@ -116,6 +121,8 @@ public class ProjectDAO {
 		try {
 			CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 			
+			EntityGraph<?> entityGraph = entityManager.getEntityGraph("projectsFetch");
+			
 			CriteriaQuery<Project> criteriaQuery = criteriaBuilder.createQuery(Project.class);
 			
 			Root<Project> root = criteriaQuery.from(Project.class);
@@ -123,6 +130,8 @@ public class ProjectDAO {
 			criteriaQuery.where(criteriaBuilder.equal(root.get("projectKey"), projectKey));
 			
 			TypedQuery<Project> typedQuery = entityManager.createQuery(criteriaQuery);
+			
+			typedQuery.setHint("javax.persistence.fetchgraph", entityGraph);
 			
 			return typedQuery.getSingleResult();
 
